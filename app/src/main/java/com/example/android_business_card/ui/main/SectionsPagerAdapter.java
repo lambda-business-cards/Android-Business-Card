@@ -35,7 +35,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return PageViewModel.strTab[position-1];
+        return PageViewModel.strTab[position];
 
     }
 

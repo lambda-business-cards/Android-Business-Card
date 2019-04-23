@@ -30,4 +30,5 @@
         tools:context=".ItemListActivity"
         tools:listitem="@layout/item_list_content" />
 
+
 </android.support.constraint.ConstraintLayout>

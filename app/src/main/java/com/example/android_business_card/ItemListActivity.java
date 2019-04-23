@@ -11,7 +11,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +24,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.android_business_card.ui.main.SectionsPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +55,7 @@ public class ItemListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
 
+
         swApiObjects = new ArrayList<>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -76,65 +81,16 @@ public class ItemListActivity extends AppCompatActivity {
 
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
     }
 
     // S04M03-8 pull out fields from recyclerview construction and call our method
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        viewAdapter = new SimpleItemRecyclerViewAdapter(this, swApiObjects, mTwoPane);
-        recyclerView.setAdapter(viewAdapter);
-        getData();
-    }
 
-    // S04M03-7 write a method to retreive all the data
-    private void getData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BusinessCard person    = null;
-                int         counter   = 1;
-                int         failCount = 0;
-                do {
-                    person = BusinessCardDAO.getPerson(counter++);
-                    if (person != null) {
-                        swApiObjects.add(person);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                viewAdapter.notifyItemChanged(swApiObjects.size() - 1);
-                            }
-                        });
-                        failCount = 0;
-                    } else {
-                        ++failCount;
-                    }
-                } while (person != null || failCount < 2);
-            }
-        }).start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BusinessCard starship    = null;
-                int         counter   = 1;
-                int         failCount = 0;
-                do {
-                    starship = BusinessCardDAO.getStarship(counter++);
-                    if (starship != null) {
-                        swApiObjects.add(starship);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                viewAdapter.notifyItemChanged(swApiObjects.size() - 1);
-                            }
-                        });
-                        failCount = 0;
-                    } else {
-                        ++failCount;
-                    }
-                } while (starship != null || failCount < 2);
-            }
-        }).start();
-    }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
@@ -262,7 +218,7 @@ public class ItemListActivity extends AppCompatActivity {
         }
 
         //        S04M03-12 add new views to viewholder
-        class ViewHolder extends RecyclerView.ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mNameView, mCategoryView;
             final ImageView mImageView;
