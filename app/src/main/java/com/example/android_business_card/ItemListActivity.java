@@ -25,8 +25,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android_business_card.ui.main.SectionsPagerAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,15 +79,63 @@ public class ItemListActivity extends AppCompatActivity {
 
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
-
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+        setupRecyclerView((RecyclerView) recyclerView);
     }
 
     // S04M03-8 pull out fields from recyclerview construction and call our method
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        viewAdapter = new SimpleItemRecyclerViewAdapter(this, swApiObjects, mTwoPane);
+        recyclerView.setAdapter(viewAdapter);
+        getData();
+    }
+    private void getData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BusinessCard person    = null;
+                int         counter   = 1;
+                int         failCount = 0;
+                do {
+                    person = BusinessCardDAO.getPerson(counter++);
+                    if (person != null) {
+                        swApiObjects.add(person);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                viewAdapter.notifyItemChanged(swApiObjects.size() - 1);
+                            }
+                        });
+                        failCount = 0;
+                    } else {
+                        ++failCount;
+                    }
+                } while (person != null || failCount < 2);
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BusinessCard starship    = null;
+                int         counter   = 1;
+                int         failCount = 0;
+                do {
+                    starship = BusinessCardDAO.getStarship(counter++);
+                    if (starship != null) {
+                        swApiObjects.add(starship);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                viewAdapter.notifyItemChanged(swApiObjects.size() - 1);
+                            }
+                        });
+                        failCount = 0;
+                    } else {
+                        ++failCount;
+                    }
+                } while (starship != null || failCount < 2);
+            }
+        }).start();
+    }
 
 
     public static class SimpleItemRecyclerViewAdapter
@@ -102,35 +148,6 @@ public class ItemListActivity extends AppCompatActivity {
         // S04M03-16 set the position value
         private int lastPosition = -1;
 
-        /*private final View.OnClickListener         mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // S04M03-17 update click listener to pass our object
-                SwApiObject item = (SwApiObject) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-//                    arguments.putString(ItemDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));  // put object in intent
-                    arguments.putSerializable(ItemDetailFragment.ARG_ITEM_ID, item);
-                    ItemDetailFragment fragment = new ItemDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                                   .replace(R.id.item_detail_container, fragment)
-                                   .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent  intent  = new Intent(context, ItemDetailActivity.class);
-                    intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item);  // put object in intent
-
-                    // S04M03-22 add options to make transition appear
-                    Bundle options = ActivityOptions.makeSceneTransitionAnimation(
-                            (Activity)view.getContext(),
-
-                                                                                 ).toBundle();
-
-                    context.startActivity(intent, options);
-                }
-            }
-        };*/
 
         SimpleItemRecyclerViewAdapter(ItemListActivity parent,
                                       List<BusinessCard> items,
