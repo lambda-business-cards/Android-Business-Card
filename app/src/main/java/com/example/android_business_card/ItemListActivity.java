@@ -25,6 +25,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +94,12 @@ public class ItemListActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    if(!BusinessCardDAO.loginBusinessCard("test1","test"))return;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return;
+                }
                 BusinessCard person    = null;
                 int         counter   = 1;
                 int         failCount = 0;
