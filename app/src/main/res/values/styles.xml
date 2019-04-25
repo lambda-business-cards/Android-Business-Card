@@ -17,4 +17,15 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="AnimationTopBottom">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
+
+
+    <style name="AnimationSpin">
+        <item name="android:windowEnterAnimation">@anim/spin_grow</item>
+        <item name="android:windowExitAnimation">@anim/spin_shrink</item>
+    </style>
 </resources>

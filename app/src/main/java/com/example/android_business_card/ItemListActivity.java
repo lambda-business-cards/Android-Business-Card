@@ -40,7 +40,8 @@ import java.util.List;
  */
 // S04M03-6 replace all references to dummycontent with out model object
 public class ItemListActivity extends AppCompatActivity {
-
+    BusinessCardDAO bcd;
+    Context context;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -54,7 +55,8 @@ public class ItemListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
-
+        context=getApplicationContext();
+        bcd=new BusinessCardDAO(context);
 
         swApiObjects = new ArrayList<>();
 
@@ -82,6 +84,24 @@ public class ItemListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+        ImageView ivButtonSetting=findViewById(R.id.button_setting);
+        ivButtonSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                sendDataToSetting();
+
+            }
+        });
+    }
+
+    private void sendDataToSetting(){
+        Context context= getApplicationContext();
+
+        Intent intent = new Intent(context, Setting.class);
+        intent.putExtra(getResources().getString(R.string.data_profile),bcd);
+        //       fromOtherScreen=true;
+        startActivityForResult(intent,1);
     }
 
     // S04M03-8 pull out fields from recyclerview construction and call our method
@@ -94,12 +114,8 @@ public class ItemListActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    if(!BusinessCardDAO.loginBusinessCard("test1","test"))return;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return;
-                }
+
+                if(!bcd.loginBusinessCard())return;
                 BusinessCard person    = null;
                 int         counter   = 1;
                 int         failCount = 0;
@@ -199,7 +215,7 @@ public class ItemListActivity extends AppCompatActivity {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
 //                    arguments.putString(ItemDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));  // put object in intent
-                        arguments.putSerializable(ItemDetailFragment.ARG_ITEM_ID, item);
+                        arguments.putParcelable(ItemDetailFragment.ARG_ITEM_ID, item);
                         ItemDetailFragment fragment = new ItemDetailFragment();
                         fragment.setArguments(arguments);
                         mParentActivity.getSupportFragmentManager().beginTransaction()

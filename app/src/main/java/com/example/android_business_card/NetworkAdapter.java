@@ -62,6 +62,7 @@ public class NetworkAdapter {
             }
 
             final int responseCode = connection.getResponseCode();
+            inputStream = connection.getInputStream();
             if (responseCode == HttpsURLConnection.HTTP_OK) {
                 inputStream = connection.getInputStream();
                 if (inputStream != null) {
