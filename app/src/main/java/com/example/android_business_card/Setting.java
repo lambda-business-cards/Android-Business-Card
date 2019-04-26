@@ -71,11 +71,11 @@ public class Setting extends AppCompatActivity {
     public void sendQRcode() {
         String str="No";
         if(bcs.get(0).isChecked){
-         //   str=bcs.get(0).getStrQRcodeURL()+"\n";
+            //   str=bcs.get(0).getStrQRcodeURL()+"\n";
             str="Persnal";
         }
         if(bcs.get(1).isChecked) {
-           // str=bcs.get(1).getStrQRcodeURL();
+            // str=bcs.get(1).getStrQRcodeURL();
             if(str=="No"){
                 str="";
                 str="Business";
@@ -83,6 +83,15 @@ public class Setting extends AppCompatActivity {
                 str += ", Business";
             }
         }
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT,str);
+        intent.setType("text/plain");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+
+
         Notification.send(context,str, "QR code sent");
     }
 
