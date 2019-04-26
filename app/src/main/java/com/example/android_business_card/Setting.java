@@ -140,7 +140,7 @@ public class Setting extends AppCompatActivity {
         ConstraintLayout cl=findViewById(R.id.cl_setting);
         Guideline gl=findViewById(R.id.guidelineVertical);
         String[] strTitle={"Your Name","Username","Password","!~Personal","e-mail","phone","ImageURL","address","fax","websiteURL","QR code URL",
-                                             "!~Business","business name","e-mail","phone","ImageURL","title","address","phone","fax","websiteURL","QR code URL"};
+                                             "!~Business","business name","e-mail","phone","ImageURL","title","address","fax","websiteURL","QR code URL"};
         setConstraintLayout(strTitle);
     }
 

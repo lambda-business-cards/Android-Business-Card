@@ -157,9 +157,11 @@ public class BusinessCardSet implements Parcelable {
     public int size() {
         return alBusinessCard.size();
     }
-    String strBaseURL="https://business-card-backend.herokuapp.com/";
-    String strCards="api/cards";
-    String strEach="/:";
+    private static String strBaseURL="https://business-card-backend.herokuapp.com/";
+    private static String strRegister="api/users/register";
+    private static String strLogin="api/users/login";
+    private static String strCards="api/cards";
+    private static String strEach="/";
 
 
     public BusinessCardSet getPeople() {
@@ -241,7 +243,7 @@ public class BusinessCardSet implements Parcelable {
     ////////////////Network API
 
     public void registerLogin(String username, String email, String password, String phone) {
-        String strURL="https://business-card-backend.herokuapp.com/api/users/register";
+        String strURL=strBaseURL+strRegister;
         JSONObject jsn = new JSONObject();
         try {
             jsn.put("username", username);
@@ -260,7 +262,7 @@ public class BusinessCardSet implements Parcelable {
 
 
     public boolean loginAPI(String username,  String password){
-        String strURL="https://business-card-backend.herokuapp.com/api/users/login";
+        String strURL=strBaseURL+strLogin;
         JSONObject jsn = new JSONObject();
         try {
             jsn.put("username", username);
@@ -296,9 +298,8 @@ public class BusinessCardSet implements Parcelable {
     }
 
 
-
     public boolean loginBusinessCard(String strName, String strPassword) throws JSONException {
-        String strURL="https://business-card-backend.herokuapp.com/api/users/login";
+        String strURL=strBaseURL+strLogin;
         String POST    = "POST";
         Map<String,String> map=new HashMap<String, String>();
         map.put("Content-Type","application/json");
@@ -343,13 +344,23 @@ public class BusinessCardSet implements Parcelable {
             return false;
         }
     }
-    public void delete(){
+    public void delete(int iIndex) {
+        String strURL = strBaseURL + strCards + strEach + Integer.toString(iIndex);
+        String POST = "DELETE";
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("Content-Type", "application/json");
+        map.put("Authorization", strToken);
 
+        final String result = NetworkAdapter.httpRequest(strURL, POST, null, map);
+
+        if (result == "") {
+
+        }
     }
 
 
     public boolean getAPI(int iIndex){
-        String strURL="https://business-card-backend.herokuapp.com/api/cards/:";
+        String strURL=strBaseURL+strCards+strEach+Integer.toString(iIndex);
         String POST    = "POST";
         Map<String,String> map=new HashMap<String, String>();
         map.put("Content-Type","application/json");
@@ -381,8 +392,7 @@ public class BusinessCardSet implements Parcelable {
     }
 
     public boolean addAPI(BusinessCard bc){
-
-        String strURL="https://business-card-backend.herokuapp.com/api/cards";
+        String strURL=strBaseURL+strCards;
         String POST    = "POST";
         Map<String,String> map=new HashMap<String, String>();
         map.put("Content-Type","application/json");
@@ -511,7 +521,6 @@ public class BusinessCardSet implements Parcelable {
         strSet[i++]=alBusinessCard.get(0).getStrPhone();
         strSet[i++]=alBusinessCard.get(0).getStrImageURL();
         strSet[i++]=alBusinessCard.get(0).getStrAddress();
-        strSet[i++]=alBusinessCard.get(0).getStrWebURL();
         strSet[i++]=alBusinessCard.get(0).getStrFax();
         strSet[i++]=alBusinessCard.get(0).getStrWebURL();
         strSet[i++]=alBusinessCard.get(0).getStrQRcodeURL();
@@ -522,11 +531,9 @@ public class BusinessCardSet implements Parcelable {
         strSet[i++]=alBusinessCard.get(1).getStrImageURL();
         strSet[i++]=alBusinessCard.get(1).getStrTitle();
         strSet[i++]=alBusinessCard.get(1).getStrAddress();
-
         strSet[i++]=alBusinessCard.get(1).getStrFax();
-        strSet[i++]=alBusinessCard.get(1).getStrQRcodeURL();//22
         strSet[i++]=alBusinessCard.get(1).getStrWebURL();
-
+        strSet[i++]=alBusinessCard.get(1).getStrQRcodeURL();//22
         return strSet;
     }
 

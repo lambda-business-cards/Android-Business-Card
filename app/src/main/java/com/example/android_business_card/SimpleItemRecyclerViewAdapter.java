@@ -3,6 +3,7 @@ package com.example.android_business_card;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -69,12 +70,7 @@ public class SimpleItemRecyclerViewAdapter
         holder.mTitleView.setText(bc.getStrTitle());
         holder.mWebURLView.setText(bc.getStrWebURL());
         holder.mTitleView.setText(bc.getStrTitle());
-        holder.btDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bc.delete();
-            }
-        });
+
 
      /*   holder.mImageView.setImageDrawable(
                 holder.mImageView.getContext().getDrawable(
@@ -86,6 +82,32 @@ public class SimpleItemRecyclerViewAdapter
         holder.mImageView.setImageBitmap(NetworkAdapter.getBitmapFromUrl(bc.getStrQRcodeURL()));
 
         holder.itemView.setTag(bc);
+        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int x = (int) event.getX();
+                int y = (int) event.getY();
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float deltaX = event.getX() - x;
+                        float deltaY = event.getY() - y;
+                        if(deltaX>0.5){
+                            bcs.delete(bc.getId());
+                            return true;
+                        }
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+
+                        break;
+                }
+
+                return false;
+            }
+        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @TargetApi(Build.VERSION_CODES.LOLLIPOP)
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
@@ -145,7 +167,7 @@ public class SimpleItemRecyclerViewAdapter
         mPhoneView,mAddressView,FaxView,mWebURLView;
         final ImageView mImageView;
         final View      parentView;
-        final Button btDelete;
+
         ViewHolder(View view) {
             super(view);
             mIDView= view.findViewById(R.id.textIDList);
@@ -159,7 +181,7 @@ public class SimpleItemRecyclerViewAdapter
             mAddressView = view.findViewById(R.id.text_address);
             FaxView = view.findViewById(R.id.text_fax);
             mWebURLView = view.findViewById(R.id.text_weburl);
-            btDelete=view.findViewById(R.id.button_delete);
+
 
         }
 
