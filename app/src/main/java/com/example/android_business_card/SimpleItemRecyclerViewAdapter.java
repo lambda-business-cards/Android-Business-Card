@@ -62,7 +62,9 @@ public class SimpleItemRecyclerViewAdapter
                         DrawableResolver.getDrawableId(
                                 bc.getStrName(),
                                 bc.getId())));*/
-        holder.mImageView.setImageBitmap(NetworkAdapter.getBitmap("test"));
+      //  holder.mImageView.getLayoutParams().width=1200;
+       // holder.mImageView.getLayoutParams().height=2000;
+        holder.mImageView.setImageBitmap(NetworkAdapter.getBitmapFromUrl(bc.getStrQRcodeURL()));
 
         holder.itemView.setTag(bc);
         holder.itemView.setOnClickListener(new View.OnClickListener() {

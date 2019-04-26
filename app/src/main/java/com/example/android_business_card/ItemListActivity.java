@@ -101,37 +101,9 @@ public class ItemListActivity extends AppCompatActivity {
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         viewAdapter = new SimpleItemRecyclerViewAdapter(this, bcs.getBusinessCardSet(), mTwoPane);
         recyclerView.setAdapter(viewAdapter);
-        getDummyData();
+
     }
 
-
-    private void getDummyData() {
-       new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-       //         if(!bcd.loginBusinessCard())return;
-                BusinessCard person    = null;
-                int         counter   = 1;
-                int         failCount = 0;
-                do {
-                    person = BusinessCardSet.getPerson(counter++);
-                    if (person != null) {
-                        bcs.add(person);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                viewAdapter.notifyItemChanged(bcs.size() - 1);
-                            }
-                        });
-                        failCount = 0;
-                    } else {
-                        ++failCount;
-                    }
-                } while (person != null || failCount < 2);
-            }
-        }).start();
-    }
 
 
 

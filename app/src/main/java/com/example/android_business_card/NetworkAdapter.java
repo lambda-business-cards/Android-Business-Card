@@ -72,8 +72,9 @@ public class NetworkAdapter {
 
             final int responseCode = connection.getResponseCode();
 
-            inputStream = connection.getInputStream();
+          //debug  inputStream = connection.getInputStream();
             if (responseCode == HttpsURLConnection.HTTP_OK||responseCode == 201) {
+                inputStream = connection.getInputStream();
                 inputStream = connection.getInputStream();
                 if (inputStream != null) {
                     BufferedReader reader  = new BufferedReader(new InputStreamReader(inputStream));
@@ -109,32 +110,50 @@ public class NetworkAdapter {
 
     }
 
-    public static Bitmap getBitmap(String strURL){
-        HttpsURLConnection connection  = null;
+
+    public static final int TIMEOUT = 3000;
+
+
+    public static Bitmap getBitmapFromUrl(String stringUrl) {
+       //debug stringUrl="http://res.cloudinary.com/dhupmye0m/image/upload/v1556250023/jvdsiob81mf9pz0cr4u9.png";
+
+        Bitmap result = null;
+        InputStream stream = null;
+        HttpURLConnection connection = null;
         try {
-            //  URL urlConnection = new URL(mItem.getStrQRcodeURL());
-            URL urlConnection = new URL("http://res.cloudinary.com/dhupmye0m/image/upload/v1556250023/jvdsiob81mf9pz0cr4u9.png");
+            URL url = new URL(stringUrl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(TIMEOUT);
+            connection.setConnectTimeout(TIMEOUT);
 
-            connection.setConnectTimeout(30000);
-            connection.setReadTimeout(30000);
-
-            connection = (HttpsURLConnection) urlConnection.openConnection();
-            //
-            connection.setDoInput(true);
             connection.connect();
 
+            if(connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                stream = connection.getInputStream();
+                if(stream != null) {
+                    result = BitmapFactory.decodeStream(stream);
+                }
+            }
 
-            InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
-        } catch (Exception e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(connection != null) {
+                connection.disconnect();
+            }
+
+            if(stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return null;
+        return result;
     }
-
-
-
 
 
 }

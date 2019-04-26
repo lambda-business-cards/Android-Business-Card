@@ -75,7 +75,9 @@ public class ItemDetailFragment extends Fragment {
 
 
                 //    mItem.getId())));
-            iv.setImageBitmap(NetworkAdapter.getBitmap("test"));
+            iv.getLayoutParams().width=1200;
+            iv.getLayoutParams().height=2000;
+            iv.setImageBitmap(NetworkAdapter.getBitmapFromUrl("test"));
         }
         return rootView;
     }

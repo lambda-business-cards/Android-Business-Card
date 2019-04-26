@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.example.android_business_card.NetworkAdapter.GET;
 
 // S04M03-4 start dao
 public class BusinessCardSet implements Parcelable {
@@ -98,17 +100,7 @@ public class BusinessCardSet implements Parcelable {
         this.preferences = preferences;
     }
 
-    public static String getBaseUrl() {
-        return BASE_URL;
-    }
 
-    public static String getPersonUrl() {
-        return PERSON_URL;
-    }
-
-    public static String getStarshipUrl() {
-        return STARSHIP_URL;
-    }
 
     private ArrayList<BusinessCard> alBusinessCard;
 
@@ -125,8 +117,10 @@ public class BusinessCardSet implements Parcelable {
         this.context = context;
         preferences = context.getSharedPreferences("BusinessCard", MODE_PRIVATE);
         readPreferanceOfLogin();
-        BusinessCard bc = getPerson(1);
         alBusinessCard = new ArrayList<BusinessCard>(100);
+        getPeople();
+        BusinessCard bc = getPerson(1);
+
         alBusinessCard.add(bc);
         alBusinessCard.add(getPerson(2));
     }
@@ -143,28 +137,42 @@ public class BusinessCardSet implements Parcelable {
     public int size() {
         return alBusinessCard.size();
     }
+    String strBaseURL="https://business-card-backend.herokuapp.com/";
+    String strCards="api/cards";
+    String strEach="/:";
 
 
-    public static BusinessCard getPerson(int id) {
-        final String result = NetworkAdapter.httpRequest(PERSON_URL + id);
+    public BusinessCardSet getPeople() {
+        Map<String,String> map=new HashMap<String, String>();
+        map.put("Content-Type","application/json");
+        map.put("Authorization",strToken);
+        final String result = NetworkAdapter.httpRequest(strBaseURL+strCards,NetworkAdapter.GET,null,map);
 
-        BusinessCard object = null;
+
         try {
             JSONObject json = new JSONObject(result);
+            JSONArray jsa = json.getJSONArray( "created");
+            JSONObject jsonTemp;
 
-            object = new BusinessCard(id, json.getString("name"));
-            object.setStrImageURL(DrawableResolver.CHARACTER);
-            object.setStrContactName(json.getString("hair_color"));
-            object.setStrAddress(json.getString("homeworld"));
-            object.setStrWebURL(json.getString("url"));
-
+            for(int i=0;i<jsa.length();i++){
+                BusinessCard bc=new BusinessCard(jsa.getJSONObject(i));
+                alBusinessCard.add(bc);
+            }
+            jsa=json.getJSONArray(  "saved");
+            for(int i=0;i<jsa.length();i++){
+                BusinessCard bc=new BusinessCard(jsa.getJSONObject(i));
+                alBusinessCard.add(bc);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        return object;
+        return this;
     }
 
+    public BusinessCard getPerson(int i){
+        return alBusinessCard.get(i);
+
+    }
 
     //Network and Sharedpreferences
     // preferences
@@ -278,9 +286,9 @@ public class BusinessCardSet implements Parcelable {
 
     /////Initial dummy
 
-    private static final String BASE_URL = "https://swapi.co/api/";
-    private static final String PERSON_URL = BASE_URL + "people/";
-    private static final String STARSHIP_URL = BASE_URL + "starships/";
+ //   private static final String BASE_URL = "https://swapi.co/api/";
+ //   private static final String PERSON_URL = BASE_URL + "people/";
+ //   private static final String STARSHIP_URL = BASE_URL + "starships/";
 
     public boolean loginBusinessCard() {
         if(strUserName.equals("")||strPassword.equals("")){
@@ -385,7 +393,7 @@ public class BusinessCardSet implements Parcelable {
         map.put("Content-Type","application/json");
         map.put("Authorization",strToken);
 
-        final String result = NetworkAdapter.httpRequest(strURL+Integer.toString(iIndex),NetworkAdapter.GET,null,map);
+        final String result = NetworkAdapter.httpRequest(strURL+Integer.toString(iIndex), GET,null,map);
 
         if(result==""){
             Notification.send(context,"Login error in Business card organizer" ,"Please check your username and password");

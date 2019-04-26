@@ -3,6 +3,8 @@ package com.example.android_business_card;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 // S04M03-3 Add Model Object
@@ -19,6 +21,44 @@ public class BusinessCard implements Parcelable {
     private String strFax;
     private String strImageURL;
     private String strQRcodeURL;
+
+
+    public BusinessCard(int id, boolean isChecked, String strName, String strContactName, String strTitle, String strAddress, String strPhone, String strEmail, String strWebURL, String strFax, String strImageURL, String strQRcodeURL) {
+        this.id = id;
+        this.isChecked = isChecked;
+        this.strName = strName;
+        this.strContactName = strContactName;
+        this.strTitle = strTitle;
+        this.strAddress = strAddress;
+        this.strPhone = strPhone;
+        this.strEmail = strEmail;
+        this.strWebURL = strWebURL;
+        this.strFax = strFax;
+        this.strImageURL = strImageURL;
+        this.strQRcodeURL = strQRcodeURL;
+    }
+
+
+
+    public BusinessCard(JSONObject json) {
+        try{
+            this.id = json.getInt("id");
+           // this.isChecked = json.getBoolean()isChecked;
+            this.strName = json.getString("business_name");
+            this.strContactName = json.getString("contact_name");
+            this.strTitle= json.getString("title");
+            this.strAddress= json.getString("address");
+            this.strPhone= json.getString("phone");
+            this.strEmail= json.getString("email");
+            this.strWebURL= json.getString( "web_url");
+            this.strFax= json.getString("fax");
+            this.strImageURL= json.getString("img_url");
+            this.strQRcodeURL= json.getString("qr_url");
+        }catch (Exception e){
+            e.getMessage();
+        }
+
+    }
 
 
     public BusinessCard(int id, String strName) {
