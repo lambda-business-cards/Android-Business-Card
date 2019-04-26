@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,12 +141,15 @@ public class BusinessCardSet implements Parcelable {
         readPreferanceOfLogin();
         alBusinessCard = new ArrayList<BusinessCard>(100);
         getPeople();
+        if(size()<2){
+            writePreferanceOfLogin();
+            readPreferanceOfLogin();
+            loginAPI(strUserName,strPassword);
+            getPeople();
 
-        BusinessCard bc = getPerson(0);
+        };
 
-        //alBusinessCard.add(bc);
-        if(size()<3)return;
-       // alBusinessCard.add(getPerson(1));
+
     }
 
     public void add(BusinessCard bc) {
@@ -256,6 +260,8 @@ public class BusinessCardSet implements Parcelable {
     public void writePreferanceOfLogin() {
 
         if (this.context == null) return;
+        strUserName = "test1";
+        strPassword = "test";
         if (preferences == null) {
             strUserName = "test1";
             strPassword = "test";
