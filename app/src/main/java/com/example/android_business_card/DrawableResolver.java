@@ -11,23 +11,10 @@ public class DrawableResolver {
     public static int getDrawableId(String category, int id) {
         int drawable;
         try {
-            switch (category) {
-                case CHARACTER:
+
                     drawable = characters[id];
-                    break;
-                case PLANET:
-                    drawable = planets[id];
-                    break;
-                case STARSHIP:
-                    drawable = starships[id];
-                    break;
-                case VEHICLE:
-                    drawable = vehicles[id];
-                    break;
-                default:
-                    drawable = R.drawable.placeholder;
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
+
+                    } catch (ArrayIndexOutOfBoundsException e) {
             drawable = R.drawable.placeholder;
         }
         return drawable;

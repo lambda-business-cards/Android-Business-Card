@@ -9,14 +9,24 @@
     android:isScrollContainer="true"
 
     tools:context=".Setting">
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content">   -->
+
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/cl_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guidelineHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintGuide_begin="60dp"
+                android:orientation="horizontal" />
 
             <android.support.constraint.Guideline
                 android:id="@+id/guidelineVertical"
@@ -26,6 +36,7 @@
                 app:layout_constraintGuide_begin="149dp" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
+
 
 </FrameLayout>
 

@@ -1,15 +1,18 @@
 package com.example.android_business_card;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -39,20 +42,11 @@ public class ItemDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
-//            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-            // S04M03-19 pull the object from the arguments
-            mItem = (BusinessCard) getArguments().getSerializable(ARG_ITEM_ID);
+            mItem = (BusinessCard) getArguments().getParcelable(ARG_ITEM_ID);
             Activity                activity     = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            /*appBarLayout.setBackground(getContext().getDrawable(
-                    DrawableResolver.getDrawableId(
-                            mItem.getCategory(),
-                            mItem.getId())));*/
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.getName());
+                appBarLayout.setTitle(mItem.getStrName());
             }
         }
     }
@@ -62,19 +56,17 @@ public class ItemDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.item_detail, container, false);
+        TextView tv=new TextView(getContext());
+        tv.setText("test");
+
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
-            // S04M03-20 set content to be our drawable
-            ((ImageView) rootView.findViewById(R.id.item_detail)).setImageDrawable(
-                    rootView.getContext().getDrawable(
-                            DrawableResolver.getDrawableId(
-                                    mItem.getCategory(),
+            ImageView iv= rootView.findViewById(R.id.item_detail);
+            iv.setImageDrawable(rootView.getContext().getDrawable( DrawableResolver.getDrawableId(
+                                    mItem.getStrContactName(),
                                     mItem.getId())));
-
         }
-
-
         return rootView;
     }
 }

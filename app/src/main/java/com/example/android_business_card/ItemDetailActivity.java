@@ -1,5 +1,6 @@
 package com.example.android_business_card;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ import android.view.Window;
  * in a {@link ItemListActivity}.
  */
 public class ItemDetailActivity extends AppCompatActivity {
-
+    BusinessCardSet bcs;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +40,8 @@ public class ItemDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action\\n\\n\\n\\n", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            sendDataToNote();
+
             }
         });
 
@@ -60,13 +61,9 @@ public class ItemDetailActivity extends AppCompatActivity {
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
             Bundle arguments = new Bundle();
-            // S04M03-18 update this to pass out object along
-            arguments.putSerializable(ItemDetailFragment.ARG_ITEM_ID, getIntent().getSerializableExtra(ItemDetailFragment.ARG_ITEM_ID));
-            /*arguments.putString(ItemDetailFragment.ARG_ITEM_ID,
-                                getIntent().getStringExtra(ItemDetailFragment.ARG_ITEM_ID));*/
+            arguments.putParcelable(ItemDetailFragment.ARG_ITEM_ID, getIntent().getParcelableExtra(ItemDetailFragment.ARG_ITEM_ID));
+
             ItemDetailFragment fragment = new ItemDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -74,6 +71,20 @@ public class ItemDetailActivity extends AppCompatActivity {
                                        .commit();
 
         }
+    }
+
+    private void sendDataToNote(){
+
+            Context context= getApplicationContext();
+            Intent intent = new Intent(context, ActivityNote.class);
+            intent.putExtra(getResources().getString(R.string.data_profile),bcs);
+            startActivityForResult(intent,1);
+
+
+    }
+
+    private void receiveData(){
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)

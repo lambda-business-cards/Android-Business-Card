@@ -24,7 +24,7 @@
             android:layout_height="75dp" />
 
         <TextView
-            android:id="@+id/id_text"
+            android:id="@+id/text_name"
             android:text="88"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
 
         <TextView
             android:layout_gravity="center_vertical"
-            android:id="@+id/name"
+            android:id="@+id/text_contact_name"
             android:text="Luke Skywalker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
 
         <TextView
             android:layout_gravity="center_vertical"
-            android:id="@+id/category"
+            android:id="@+id/text_email"
             android:text="Character"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
