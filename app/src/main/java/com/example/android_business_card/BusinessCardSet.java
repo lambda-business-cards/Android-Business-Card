@@ -284,11 +284,6 @@ public class BusinessCardSet implements Parcelable {
 
 
 
-    /////Initial dummy
-
- //   private static final String BASE_URL = "https://swapi.co/api/";
- //   private static final String PERSON_URL = BASE_URL + "people/";
- //   private static final String STARSHIP_URL = BASE_URL + "starships/";
 
     public boolean loginBusinessCard() {
         if(strUserName.equals("")||strPassword.equals("")){
@@ -350,38 +345,6 @@ public class BusinessCardSet implements Parcelable {
             return false;
         }
     }
-
-    public boolean getAPIAll(){
-
-        String strURL="https://business-card-backend.herokuapp.com/api/cards/:";
-        String POST    = "POST";
-        Map<String,String> map=new HashMap<String, String>();
-        map.put("Content-Type","application/json");
-        map.put("Authorization",strToken);
-
-     /*   final String result = NetworkAdapter.httpRequest(strURL+Integer.toString(iIndex),NetworkAdapter.GET,null,map);
-
-        if(result==""){
-            Notification.send(context,"Login error in Business card organizer" ,"Please check your username and password");
-            return false;
-        }else{
-            try{
-                JSONObject jsn=new JSONObject(result);
-                alBusinessCard.get(iIndex).setStrName(jsn.getString("business_name"));
-                alBusinessCard.get(iIndex).setStrContactName(jsn.getString("contact_name"));
-                alBusinessCard.get(iIndex).setStrEmail(jsn.getString("email"));
-                alBusinessCard.get(iIndex).setStrTitle(jsn.getString("title"));
-                alBusinessCard.get(iIndex).setStrPhone(jsn.getString("phone"));
-                alBusinessCard.get(iIndex).setStrAddress(jsn.getString("address"));
-                alBusinessCard.get(iIndex).setStrFax(jsn.getString("fax"));
-                alBusinessCard.get(iIndex).setStrWebURL(jsn.getString("web_url"));
-            }catch (Exception e){
-                Notification.send(context,"Error",e.getMessage());
-                return false;
-            }*/
-
-        return true;
-        }
 
 
 

@@ -174,6 +174,9 @@ public class BusinessCard implements Parcelable {
     public int getId() {
         return id;
     }
+    public String getStrId() {
+        return Integer.toString(id);
+    }
 
     public void setId(int id) {
         this.id = id;

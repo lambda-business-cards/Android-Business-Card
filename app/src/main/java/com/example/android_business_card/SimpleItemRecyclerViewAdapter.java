@@ -11,6 +11,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -57,6 +58,15 @@ public class SimpleItemRecyclerViewAdapter
 
 //        S04M03-13 bind data to new views
         holder.mEmailView.setText(bc.getStrEmail());
+        holder.mIDView.setText(bc.getStrId());
+
+        holder.mAddressView.setText(bc.getStrAddress());
+        holder.mPhoneView.setText(bc.getStrPhone());
+        holder.FaxView.setText(bc.getStrFax());
+        holder.mTitleView.setText(bc.getStrTitle());
+        holder.mWebURLView.setText(bc.getStrWebURL());
+        holder.mTitleView.setText(bc.getStrTitle());
+
      /*   holder.mImageView.setImageDrawable(
                 holder.mImageView.getContext().getDrawable(
                         DrawableResolver.getDrawableId(
@@ -121,18 +131,26 @@ public class SimpleItemRecyclerViewAdapter
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView mNameView;
-        final TextView mContactView, mEmailView;
+        final TextView mIDView,mNameView
+                ,mContactView,mEmailView,mTitleView,
+        mPhoneView,mAddressView,FaxView,mWebURLView;
         final ImageView mImageView;
         final View      parentView;
 
         ViewHolder(View view) {
             super(view);
+            mIDView= view.findViewById(R.id.textIDList);
             mNameView = (TextView) view.findViewById(R.id.text_name);
              mContactView= (TextView) view.findViewById(R.id.text_contact_name);
             mEmailView = view.findViewById(R.id.text_email);
             mImageView = view.findViewById(R.id.image_view);
             parentView = view.findViewById(R.id.parent_view);
+            mTitleView = view.findViewById(R.id.text_title);
+            mPhoneView = view.findViewById(R.id.text_phone);
+            mAddressView = view.findViewById(R.id.text_address);
+            FaxView = view.findViewById(R.id.text_fax);
+            mWebURLView = view.findViewById(R.id.text_weburl);
         }
+
     }
 }
