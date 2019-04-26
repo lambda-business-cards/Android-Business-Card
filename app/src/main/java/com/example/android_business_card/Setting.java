@@ -39,8 +39,9 @@ public class Setting extends AppCompatActivity {
         findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveProfile();
-                Notification.send(context,"save setting","sent");
+
+                sendQRcode();
+
             }
         });
         findViewById(R.id.button_register).setOnTouchListener(new View.OnTouchListener() {
@@ -67,8 +68,22 @@ public class Setting extends AppCompatActivity {
 
 
     }
-    public void saveProfile(){
-        bcs.saveProfile();
+    public void sendQRcode() {
+        String str="No";
+        if(bcs.get(0).isChecked){
+         //   str=bcs.get(0).getStrQRcodeURL()+"\n";
+            str="Persnal";
+        }
+        if(bcs.get(1).isChecked) {
+           // str=bcs.get(1).getStrQRcodeURL();
+            if(str=="No"){
+                str="";
+                str="Business";
+            }else {
+                str += ", Business";
+            }
+        }
+        Notification.send(context,str, "QR code sent");
     }
 
     public void ReceiveData(){
@@ -115,7 +130,8 @@ public class Setting extends AppCompatActivity {
     public void setView(){
         ConstraintLayout cl=findViewById(R.id.cl_setting);
         Guideline gl=findViewById(R.id.guidelineVertical);
-        String[] strTitle={"Your Name","Username","Password","!~Personal","e-mail","phone","ImageURL","address","websiteURL","fax","QR code URL","!~Business","business name","e-mail","phone","ImageURL","title","address","phone","fax","websiteURL","QR code URL"};
+        String[] strTitle={"Your Name","Username","Password","!~Personal","e-mail","phone","ImageURL","address","fax","websiteURL","QR code URL",
+                                             "!~Business","business name","e-mail","phone","ImageURL","title","address","phone","fax","websiteURL","QR code URL"};
         setConstraintLayout(strTitle);
     }
 
@@ -151,11 +167,21 @@ public class Setting extends AppCompatActivity {
                 tv.setId(iBase+2*i);
                 tv.setText(strTemp);
                 tv.setTextSize(iSizeText);
-                CheckBox cb=new CheckBox(context);
+                final CheckBox cb=new CheckBox(context);
                 cb.setId(iBase+2*i+1);
                 cb.setChecked(bChecked);
+                cb.setTag(i);
+                cb.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if ((int) cb.getTag() < 6) {
+                            bcs.get(0).setChecked(cb.isChecked());
+                        } else{
+                            bcs.get(1).setChecked(cb.isChecked());
 
-                cl.addView(tv);
+                        }
+                    }
+                });
                 cl.addView(cb);
 
                 cs.constrainHeight(cb.getId(),ConstraintSet.WRAP_CONTENT);

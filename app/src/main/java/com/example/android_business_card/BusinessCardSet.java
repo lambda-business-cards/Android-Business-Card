@@ -500,10 +500,9 @@ public class BusinessCardSet implements Parcelable {
         alBusinessCard.get(0).setStrEmail(strSet[i++]);
         alBusinessCard.get(0).setStrPhone(strSet[i++]);
         alBusinessCard.get(0).setStrAddress(strSet[i++]);
-        alBusinessCard.get(0).setStrWebURL(strSet[i++]);
         alBusinessCard.get(0).setStrFax(strSet[i++]);
-        alBusinessCard.get(0).setStrQRcodeURL(strSet[i++]);
         alBusinessCard.get(0).setStrWebURL(strSet[i++]);
+        alBusinessCard.get(0).setStrQRcodeURL(strSet[i++]);
         alBusinessCard.get(1).isChecked = Boolean.valueOf(strSet[i++]);
         alBusinessCard.get(0).setStrContactName(strSet[i]); //Company name in personal info
         alBusinessCard.get(1).setStrName(strSet[i++]);
@@ -512,10 +511,10 @@ public class BusinessCardSet implements Parcelable {
         alBusinessCard.get(1).setStrImageURL(strSet[i++]);
         alBusinessCard.get(1).setStrTitle(strSet[i++]);
         alBusinessCard.get(1).setStrAddress(strSet[i++]);
-
-        alBusinessCard.get(1).setStrWebURL(strSet[i++]);
         alBusinessCard.get(1).setStrFax(strSet[i++]);
+        alBusinessCard.get(1).setStrWebURL(strSet[i++]);
         alBusinessCard.get(1).setStrQRcodeURL(strSet[i++]);
+
     }
 
     public String[] getStringUser(){
@@ -532,6 +531,7 @@ public class BusinessCardSet implements Parcelable {
         strSet[i++]=alBusinessCard.get(0).getStrAddress();
         strSet[i++]=alBusinessCard.get(0).getStrWebURL();
         strSet[i++]=alBusinessCard.get(0).getStrFax();
+        strSet[i++]=alBusinessCard.get(0).getStrWebURL();
         strSet[i++]=alBusinessCard.get(0).getStrQRcodeURL();
         strSet[i++]=Boolean.toString(alBusinessCard.get(1).isChecked);
         strSet[i++]=alBusinessCard.get(1).getStrName();
@@ -540,9 +540,10 @@ public class BusinessCardSet implements Parcelable {
         strSet[i++]=alBusinessCard.get(1).getStrImageURL();
         strSet[i++]=alBusinessCard.get(1).getStrTitle();
         strSet[i++]=alBusinessCard.get(1).getStrAddress();
-        strSet[i++]=alBusinessCard.get(1).getStrWebURL();
+
         strSet[i++]=alBusinessCard.get(1).getStrFax();
         strSet[i++]=alBusinessCard.get(1).getStrQRcodeURL();//22
+        strSet[i++]=alBusinessCard.get(1).getStrWebURL();
 
         return strSet;
     }

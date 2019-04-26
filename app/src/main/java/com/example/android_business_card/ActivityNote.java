@@ -36,7 +36,7 @@ public class ActivityNote extends AppCompatActivity {
             findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    saveProfile();
+
                     Notification.send(context,"save setting","sent");
                 }
             });
