@@ -1,5 +1,8 @@
 package com.example.android_business_card;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -7,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -102,5 +106,35 @@ public class NetworkAdapter {
             }
         }
         return result;
+
     }
+
+    public static Bitmap getBitmap(String strURL){
+        HttpsURLConnection connection  = null;
+        try {
+            //  URL urlConnection = new URL(mItem.getStrQRcodeURL());
+            URL urlConnection = new URL("http://res.cloudinary.com/dhupmye0m/image/upload/v1556250023/jvdsiob81mf9pz0cr4u9.png");
+
+            connection.setConnectTimeout(30000);
+            connection.setReadTimeout(30000);
+
+            connection = (HttpsURLConnection) urlConnection.openConnection();
+            //
+            connection.setDoInput(true);
+            connection.connect();
+
+
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+
 }

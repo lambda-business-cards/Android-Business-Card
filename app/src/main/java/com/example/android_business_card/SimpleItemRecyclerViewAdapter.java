@@ -57,11 +57,12 @@ public class SimpleItemRecyclerViewAdapter
 
 //        S04M03-13 bind data to new views
         holder.mEmailView.setText(bc.getStrEmail());
-        holder.mImageView.setImageDrawable(
+     /*   holder.mImageView.setImageDrawable(
                 holder.mImageView.getContext().getDrawable(
                         DrawableResolver.getDrawableId(
                                 bc.getStrName(),
-                                bc.getId())));
+                                bc.getId())));*/
+        holder.mImageView.setImageBitmap(NetworkAdapter.getBitmap("test"));
 
         holder.itemView.setTag(bc);
         holder.itemView.setOnClickListener(new View.OnClickListener() {

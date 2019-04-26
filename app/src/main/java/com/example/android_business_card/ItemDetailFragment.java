@@ -2,6 +2,8 @@ package com.example.android_business_card;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -13,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -58,15 +64,26 @@ public class ItemDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.item_detail, container, false);
         TextView tv=new TextView(getContext());
         tv.setText("test");
-
+        Bitmap myBitmap = null;
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
             ImageView iv= rootView.findViewById(R.id.item_detail);
-            iv.setImageDrawable(rootView.getContext().getDrawable( DrawableResolver.getDrawableId(
-                                    mItem.getStrContactName(),
-                                    mItem.getId())));
+            //iv.setImageDrawable(rootView.getContext().getDrawable( mItem.getDrawableResolver.getDrawableId(
+
+              //      mItem.getStrContactName(),
+
+
+                //    mItem.getId())));
+            iv.setImageBitmap(NetworkAdapter.getBitmap("test"));
         }
         return rootView;
     }
+
+    private String url;
+    private ImageView imageView;
+
+
+
+
 }

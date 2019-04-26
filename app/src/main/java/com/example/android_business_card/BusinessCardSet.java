@@ -112,37 +112,37 @@ public class BusinessCardSet implements Parcelable {
 
     private ArrayList<BusinessCard> alBusinessCard;
 
-    public ArrayList<BusinessCard> getBusinessCardSet(){
+    public ArrayList<BusinessCard> getBusinessCardSet() {
         return alBusinessCard;
     }
 
 
-    public void setBusinessCardSet(ArrayList<BusinessCard> alb ){
-        alBusinessCard=alb;
+    public void setBusinessCardSet(ArrayList<BusinessCard> alb) {
+        alBusinessCard = alb;
     }
 
     public BusinessCardSet(Context context) {
-        this.context=context;
+        this.context = context;
         preferences = context.getSharedPreferences("BusinessCard", MODE_PRIVATE);
         readPreferanceOfLogin();
-        BusinessCard bc=getPerson(1);
-        alBusinessCard=new ArrayList<BusinessCard>(100);
+        BusinessCard bc = getPerson(1);
+        alBusinessCard = new ArrayList<BusinessCard>(100);
         alBusinessCard.add(bc);
         alBusinessCard.add(getPerson(2));
     }
 
-    public void add(BusinessCard bc){
+    public void add(BusinessCard bc) {
         alBusinessCard.add(bc);
 
     }
-    public BusinessCard get(int index){
+
+    public BusinessCard get(int index) {
         return alBusinessCard.get(index);
     }
 
-    public int size(){
+    public int size() {
         return alBusinessCard.size();
     }
-
 
 
     public static BusinessCard getPerson(int id) {
@@ -168,52 +168,116 @@ public class BusinessCardSet implements Parcelable {
 
     //Network and Sharedpreferences
     // preferences
-    private  String strUserID;
-    private  String strUserName="";
-    private  String strToken="";
-    private  String strPassword="";
-    private  Context context;
-    private  SharedPreferences preferences;
+    private String strUserID;
+    private String strUserName = "";
+    private String strToken = "";
+    private String strPassword = "";
+    private Context context;
+    private SharedPreferences preferences;
 
 
-    public void readPreferanceOfLogin(){
-        if(this.context==null)return;
-        if(preferences==null){
+    public void readPreferanceOfLogin() {
+        if (this.context == null) return;
+        if (preferences == null) {
 
-        }else{
-            strPassword=preferences.getString("USERPASSWORD","");
-            strUserName=preferences.getString("USERNAME","");
-            strUserID=preferences.getString("USERID","");
-            strToken=preferences.getString("TOKEN","");
+        } else {
+            strPassword = preferences.getString("USERPASSWORD", "");
+            strUserName = preferences.getString("USERNAME", "");
+            strUserID = preferences.getString("USERID", "");
+            strToken = preferences.getString("TOKEN", "");
         }
 
         //initial test
-     //   if(strPassword.equals(""))strPassword="test";
-     //   if(strUserName.equals(""))strUserName="test1";
-      //  writePreferanceOfLogin();
+        //   if(strPassword.equals(""))strPassword="test";
+        //   if(strUserName.equals(""))strUserName="test1";
+        //  writePreferanceOfLogin();
     }
 
-    public void writePreferanceOfLogin(){
+    public void writePreferanceOfLogin() {
 
-        if(this.context==null)return;
-        if(preferences==null){
-            strUserName="test1";
-            strPassword="test";
-        }else{
+        if (this.context == null) return;
+        if (preferences == null) {
+            strUserName = "test1";
+            strPassword = "test";
+        } else {
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("USERPASSWORD",strPassword);
-            editor.putString("USERNAME",strUserName);
-            editor.putString("USERID",strUserID);
-            editor.putString("TOKEN",strToken);
-            editor.clear();
+            editor.putString("USERPASSWORD", strPassword);
+            editor.putString("USERNAME", strUserName);
+            editor.putString("USERID", strUserID);
+            editor.putString("TOKEN", strToken);
+            // editor.clear();
 
             editor.commit();
         }
 
 
     }
+
+    public void clearSharepreferences(){
+        preferences.edit().clear();
+        preferences.edit().commit();
+    }
     ////////////////Network API
+
+    public void registerLogin(String username, String email, String password, String phone) {
+        String strURL="https://business-card-backend.herokuapp.com/api/users/register";
+        JSONObject jsn = new JSONObject();
+        try {
+            jsn.put("username", username);
+            jsn.put("emai", email);
+            jsn.put("password", password);
+            jsn.put("phone", phone);
+        }catch(Exception e) {
+            e.getMessage();
+        }
+        Map<String,String> map=new HashMap<String, String>();
+        map.put("Content-Type","application/json");
+        final String result = NetworkAdapter.httpRequest(strURL,NetworkAdapter.POST,jsn,map);
+        writePreferanceOfLogin();
+    }
+
+
+
+    public boolean loginAPI(String username,  String password){
+        String strURL="https://business-card-backend.herokuapp.com/api/users/login";
+        JSONObject jsn = new JSONObject();
+        try {
+            jsn.put("username", username);
+            jsn.put("password", password);
+
+        }catch(Exception e) {
+            e.getMessage();
+        }
+        Map<String,String> map=new HashMap<String, String>();
+        map.put("Content-Type","application/json");
+        final String result = NetworkAdapter.httpRequest(strURL,NetworkAdapter.POST,jsn,map);
+        if(result==""){
+            Notification.send(context,"Login error in Business card organizer" ,"Please check your username and password");
+            AlertDialog dialog = new AlertDialog.Builder(context).setTitle("Error").setMessage("Login failed!").create();
+            dialog.getWindow().getAttributes().windowAnimations = R.style.AnimationTopBottom;
+            dialog.show();
+            return false;
+        }else{
+            try{
+                jsn=new JSONObject(result);
+                strUserID=jsn.get("user_id").toString();
+                strUserName=jsn.get("username").toString();
+                strToken=jsn.get("token").toString();
+                writePreferanceOfLogin();
+            }catch (Exception e){
+
+                Notification.send(context,"Error",e.getMessage());
+            }
+
+            return true;
+        }
+
+    }
+
+
+
     /////Initial dummy
+
     private static final String BASE_URL = "https://swapi.co/api/";
     private static final String PERSON_URL = BASE_URL + "people/";
     private static final String STARSHIP_URL = BASE_URL + "starships/";
@@ -269,7 +333,85 @@ public class BusinessCardSet implements Parcelable {
         }
     }
 
-    public boolean saveProfile(){
+    public boolean saveProfile(){ //0 and 1 are reserved for owner
+        if (updateAPI(0,alBusinessCard.get(0))) {
+            updateAPI(0,alBusinessCard.get(1));
+            writePreferanceOfLogin();
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    public boolean getAPIAll(){
+
+        String strURL="https://business-card-backend.herokuapp.com/api/cards/:";
+        String POST    = "POST";
+        Map<String,String> map=new HashMap<String, String>();
+        map.put("Content-Type","application/json");
+        map.put("Authorization",strToken);
+
+     /*   final String result = NetworkAdapter.httpRequest(strURL+Integer.toString(iIndex),NetworkAdapter.GET,null,map);
+
+        if(result==""){
+            Notification.send(context,"Login error in Business card organizer" ,"Please check your username and password");
+            return false;
+        }else{
+            try{
+                JSONObject jsn=new JSONObject(result);
+                alBusinessCard.get(iIndex).setStrName(jsn.getString("business_name"));
+                alBusinessCard.get(iIndex).setStrContactName(jsn.getString("contact_name"));
+                alBusinessCard.get(iIndex).setStrEmail(jsn.getString("email"));
+                alBusinessCard.get(iIndex).setStrTitle(jsn.getString("title"));
+                alBusinessCard.get(iIndex).setStrPhone(jsn.getString("phone"));
+                alBusinessCard.get(iIndex).setStrAddress(jsn.getString("address"));
+                alBusinessCard.get(iIndex).setStrFax(jsn.getString("fax"));
+                alBusinessCard.get(iIndex).setStrWebURL(jsn.getString("web_url"));
+            }catch (Exception e){
+                Notification.send(context,"Error",e.getMessage());
+                return false;
+            }*/
+
+        return true;
+        }
+
+
+
+    public boolean getAPI(int iIndex){
+
+        String strURL="https://business-card-backend.herokuapp.com/api/cards/:";
+        String POST    = "POST";
+        Map<String,String> map=new HashMap<String, String>();
+        map.put("Content-Type","application/json");
+        map.put("Authorization",strToken);
+
+        final String result = NetworkAdapter.httpRequest(strURL+Integer.toString(iIndex),NetworkAdapter.GET,null,map);
+
+        if(result==""){
+            Notification.send(context,"Login error in Business card organizer" ,"Please check your username and password");
+            return false;
+        }else{
+            try{
+                JSONObject jsn=new JSONObject(result);
+                alBusinessCard.get(iIndex).setStrName(jsn.getString("business_name"));
+                alBusinessCard.get(iIndex).setStrContactName(jsn.getString("contact_name"));
+                alBusinessCard.get(iIndex).setStrEmail(jsn.getString("email"));
+                alBusinessCard.get(iIndex).setStrTitle(jsn.getString("title"));
+                alBusinessCard.get(iIndex).setStrPhone(jsn.getString("phone"));
+                alBusinessCard.get(iIndex).setStrAddress(jsn.getString("address"));
+                alBusinessCard.get(iIndex).setStrFax(jsn.getString("fax"));
+                alBusinessCard.get(iIndex).setStrWebURL(jsn.getString("web_url"));
+            }catch (Exception e){
+                Notification.send(context,"Error",e.getMessage());
+                return false;
+            }
+            return true;
+
+        }
+    }
+
+    public boolean addAPI(BusinessCard bc){
+
         String strURL="https://business-card-backend.herokuapp.com/api/cards";
         String POST    = "POST";
         Map<String,String> map=new HashMap<String, String>();
@@ -278,9 +420,15 @@ public class BusinessCardSet implements Parcelable {
 
         JSONObject jsn=new JSONObject();
         try{
-            jsn.put("business_name", alBusinessCard.get(0).getStrName());
-            jsn.put("contact_name", alBusinessCard.get(0).getStrContactName());
-            jsn.put("email", alBusinessCard.get(0).getStrEmail());
+            jsn.put("business_name", bc.getStrName());
+            jsn.put("contact_name", bc.getStrContactName());
+            jsn.put("email", bc.getStrEmail());
+            jsn.put("phone", bc.getStrPhone());
+            jsn.put("title", bc.getStrAddress());
+            jsn.put("fax", bc.getStrFax());
+            jsn.put("web_url", bc.getStrWebURL());
+
+
         }catch (Exception e){
             e.getMessage();
         }
@@ -290,29 +438,63 @@ public class BusinessCardSet implements Parcelable {
             Notification.send(context,"Login error in Business card organizer" ,"Please check your username and password");
             return false;
         }else{
-            if(saveResult(0,result)){
-                return saveResult(1,result);
-            }else{
+            try{
+                jsn=new JSONObject(result);
+                return (jsn.getString("message").equals("Success"));
+            }catch (Exception e){
+                Notification.send(context,"Error",e.getMessage());
                 return false;
             }
+
+        }
+
+    }
+
+    public boolean updateAPI(int iIndex,BusinessCard bc) {
+
+       String strURL = "https://business-card-backend.herokuapp.com/api/cards/:"+Integer.toString(iIndex);
+        String POST = "POST";
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("Content-Type", "application/json");
+        map.put("Authorization", strToken);
+
+        JSONObject jsn = new JSONObject();
+        try {
+            jsn.put("business_name", bc.getStrName());
+            jsn.put("contact_name", bc.getStrContactName());
+            jsn.put("email", bc.getStrEmail());
+            jsn.put("phone", bc.getStrPhone());
+            jsn.put("title", bc.getStrAddress());
+            jsn.put("fax", bc.getStrFax());
+            jsn.put("web_url", bc.getStrWebURL());
+
+
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        final String result = NetworkAdapter.httpRequest(strURL, NetworkAdapter.POST, jsn, map);
+
+        if (result == "") {
+            Notification.send(context, "Login error in Business card organizer", "Please check your username and password");
+            return false;
+        } else {
+            try {
+                jsn = new JSONObject(result);
+                return (jsn.getString("message").equals("Success"));
+            } catch (Exception e) {
+                Notification.send(context, "Error", e.getMessage());
+                return false;
+            }
+
         }
     }
 
-    public boolean saveResult(int iIndex, String result){
-        try{
-            JSONObject jsn=new JSONObject(result);
-            alBusinessCard.get(iIndex).setStrName(jsn.getString("business_name"));
-            alBusinessCard.get(iIndex).setStrContactName(jsn.getString("contact_name"));
-            alBusinessCard.get(iIndex).setStrEmail(jsn.getString("email"));
-            alBusinessCard.get(iIndex).setStrPhone(jsn.getString("phone"));
-            alBusinessCard.get(iIndex).setStrAddress(jsn.getString("address"));
-            alBusinessCard.get(iIndex).setStrFax(jsn.getString("fax"));
-            alBusinessCard.get(iIndex).setStrWebURL(jsn.getString("web_url"));
-        }catch (Exception e){
-            Notification.send(context,"Error",e.getMessage());
-            return false;
+    public void saveAll(){
+        for(int i=0;i<size();i++){
+            updateAPI(i,alBusinessCard.get(i));
+
         }
-        return true;
+
     }
 
     public String[] getStringUserInfo(){

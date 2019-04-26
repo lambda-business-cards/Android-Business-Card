@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -23,7 +24,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 public class Setting extends AppCompatActivity {
-    BusinessCardSet bcd;
+    BusinessCardSet bcs;
     Context context;
     int iBase;
     @Override
@@ -42,14 +43,36 @@ public class Setting extends AppCompatActivity {
                 Notification.send(context,"save setting","sent");
             }
         });
+        findViewById(R.id.button_register).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                bcs.registerLogin(bcs.getStrUserName(),bcs.get(0).getStrEmail(), bcs.getStrPassword(),bcs.get(0).getStrPhone());
+                return false;
+            }
+        });
+        findViewById(R.id.button_clear).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                bcs.clearSharepreferences();
+                return false;
+            }
+        });
+        findViewById(R.id.button_login).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                bcs.loginAPI(bcs.getStrUserName(),bcs.getStrPassword());
+                return false;
+            }
+        });
+
 
     }
     public void saveProfile(){
-        bcd.saveProfile();
+        bcs.saveProfile();
     }
 
     public void ReceiveData(){
-        bcd=(BusinessCardSet)getIntent().getParcelableExtra(getResources().getString(R.string.data_profile));
+        bcs=(BusinessCardSet)getIntent().getParcelableExtra(getResources().getString(R.string.data_profile));
 
     }
 
@@ -83,9 +106,9 @@ public class Setting extends AppCompatActivity {
 
     private void sendData(){
         String[] strResult=getStringProfile();
-        bcd.setStringUser(strResult);
+        bcs.setStringUser(strResult);
         Intent intent = new Intent(context, ItemListActivity.class);
-        intent.putExtra("DATA_FROM_SETTING", bcd);
+        intent.putExtra("DATA_FROM_SETTING", bcs);
         startActivity(intent);
     }
 
@@ -106,7 +129,7 @@ public class Setting extends AppCompatActivity {
         Guideline glv=findViewById(R.id.guidelineVertical);
         Guideline glh=findViewById(R.id.guidelineHorizontal);
 
-        String[] straBC=bcd.getStringUser();
+        String[] straBC=bcs.getStringUser();
 
 
         iBase=glv.getId()+iIndex;
