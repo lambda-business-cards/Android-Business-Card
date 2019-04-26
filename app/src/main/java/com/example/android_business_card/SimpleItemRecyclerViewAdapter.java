@@ -3,7 +3,6 @@ package com.example.android_business_card;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -31,7 +30,7 @@ public class SimpleItemRecyclerViewAdapter
     private final BusinessCardSet bcs;
     private final List<BusinessCard> mValues;
     private final boolean           mTwoPane;
-
+    static float xx;
     // S04M03-16 set the position value
     private int lastPosition = -1;
 
@@ -57,6 +56,7 @@ public class SimpleItemRecyclerViewAdapter
     public void onBindViewHolder(final ViewHolder holder, int position) {
         // S04M03-10 convert id to string to display
         final BusinessCard bc = mValues.get(position);
+
         holder.mNameView.setText(bc.getStrName());
         holder.mContactView.setText(bc.getStrContactName());
 
@@ -72,11 +72,6 @@ public class SimpleItemRecyclerViewAdapter
         holder.mTitleView.setText(bc.getStrTitle());
 
 
-     /*   holder.mImageView.setImageDrawable(
-                holder.mImageView.getContext().getDrawable(
-                        DrawableResolver.getDrawableId(
-                                bc.getStrName(),
-                                bc.getId())));*/
       //  holder.mImageView.getLayoutParams().width=1200;
        // holder.mImageView.getLayoutParams().height=2000;
         holder.mImageView.setImageBitmap(NetworkAdapter.getBitmapFromUrl(bc.getStrQRcodeURL()));
@@ -85,26 +80,25 @@ public class SimpleItemRecyclerViewAdapter
         holder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                int x = (int) event.getX();
-                int y = (int) event.getY();
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        xx = (int) event.getX();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        float deltaX = event.getX() - x;
-                        float deltaY = event.getY() - y;
-                        if(deltaX>0.5){
-                            bcs.delete(bc.getId());
-                            return true;
-                        }
 
                         break;
-                    case MotionEvent.ACTION_UP:
 
-                        break;
+                        case MotionEvent.ACTION_UP:
+                            float deltaX = event.getX() - xx;
+                            if(deltaX>500) {
+                                bcs.delete(bc.getId());
+                                Notification.send(v.getContext(), "deleted", Integer.toString(bc.getId()));
+
+                                return true;
+                            }
+                                break;
                 }
-
                 return false;
             }
         });

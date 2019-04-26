@@ -107,11 +107,34 @@ public class ItemListActivity extends AppCompatActivity {
     }
 
 
+    private boolean handleSendText(Intent intent) {
+        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (sharedText != null) {
+            return bcs.getAPI(Integer.parseInt(sharedText));
+            // Update UI to reflect text being shared
+        }
+        return false;
+    }
 
 
 
     private BusinessCardSet receiveData(){
-        BusinessCardSet bcs=(BusinessCardSet) getIntent().getParcelableExtra(  "DATA_FROM_SETTING");
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                handleSendText(intent); // Handle text being sent
+            } else{
+
+            }
+        }
+        BusinessCardSet bcs=(BusinessCardSet) intent.getParcelableExtra(  "DATA_FROM_SETTING");
+
+
+
         return bcs;
     }
 }

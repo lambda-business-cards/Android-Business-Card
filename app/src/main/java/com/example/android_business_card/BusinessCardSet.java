@@ -140,9 +140,12 @@ public class BusinessCardSet implements Parcelable {
         readPreferanceOfLogin();
         alBusinessCard = new ArrayList<BusinessCard>(100);
         getPeople();
-        BusinessCard bc = getPerson(1);
-        alBusinessCard.add(bc);
-        alBusinessCard.add(getPerson(2));
+
+        BusinessCard bc = getPerson(0);
+
+        //alBusinessCard.add(bc);
+        if(size()<3)return;
+       // alBusinessCard.add(getPerson(1));
     }
 
     public void add(BusinessCard bc) {
@@ -170,28 +173,60 @@ public class BusinessCardSet implements Parcelable {
         map.put("Authorization",strToken);
         final String result = NetworkAdapter.httpRequest(strBaseURL+strCards,NetworkAdapter.GET,null,map);
 
-
         try {
             JSONObject json = new JSONObject(result);
             JSONArray jsa = json.getJSONArray( "created");
             JSONObject jsonTemp;
 
             for(int i=0;i<jsa.length();i++){
+
                 BusinessCard bc=new BusinessCard(jsa.getJSONObject(i));
-                alBusinessCard.add(bc);
+                if(size()<2){
+                    alBusinessCard.add(bc);
+                }else{
+                    if(isProfile(bc)){
+
+                    }else{
+                        alBusinessCard.add(bc);
+                    }
+                }
+
             }
             jsa=json.getJSONArray(  "saved");
             for(int i=0;i<jsa.length();i++){
                 BusinessCard bc=new BusinessCard(jsa.getJSONObject(i));
-                alBusinessCard.add(bc);
+                if(size()<2){
+                    alBusinessCard.add(bc);
+                }else{
+                    if(isProfile(bc)){
+
+                    }else{
+                        alBusinessCard.add(bc);
+                    }
+                }
+
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return this;
     }
+    private boolean isProfile(BusinessCard bc){
+        if(alBusinessCard.get(0).getId()==bc.getId()||
+                alBusinessCard.get(1).getId()==bc.getId()){
+            return true;
+        }
+        return false;
+    }
 
     public BusinessCard getPerson(int i){
+
+        if(size()==0){
+
+            BusinessCard bc=new BusinessCard(1,"Akagi");
+            alBusinessCard.add(bc);
+        }
         return alBusinessCard.get(i);
 
     }
@@ -337,13 +372,15 @@ public class BusinessCardSet implements Parcelable {
 
     public boolean saveProfile(){ //0 and 1 are reserved for owner
         if (updateAPI(0,alBusinessCard.get(0))) {
-            updateAPI(0,alBusinessCard.get(1));
+            updateAPI(1,alBusinessCard.get(1));
             writePreferanceOfLogin();
             return true;
         } else{
             return false;
         }
     }
+
+
     public void delete(int iIndex) {
         String strURL = strBaseURL + strCards + strEach + Integer.toString(iIndex);
         String POST = "DELETE";
@@ -391,7 +428,7 @@ public class BusinessCardSet implements Parcelable {
         }
     }
 
-    public boolean addAPI(BusinessCard bc){
+    public BusinessCard addAPI(BusinessCard bc){
         String strURL=strBaseURL+strCards;
         String POST    = "POST";
         Map<String,String> map=new HashMap<String, String>();
@@ -414,16 +451,20 @@ public class BusinessCardSet implements Parcelable {
         }
         final String result = NetworkAdapter.httpRequest(strURL,NetworkAdapter.POST,jsn,map);
 
+
         if(result==""){
             Notification.send(context,"Login error in Business card organizer" ,"Please check your username and password");
-            return false;
+            return bc;
         }else{
             try{
                 jsn=new JSONObject(result);
-                return (jsn.getString("message").equals("Success"));
+
+               // getAPI()
+                Notification.send(context, "added business card",jsn.getString("message"));
+                return bc;
             }catch (Exception e){
                 Notification.send(context,"Error",e.getMessage());
-                return false;
+                return bc;
             }
 
         }
@@ -432,7 +473,7 @@ public class BusinessCardSet implements Parcelable {
 
     public boolean updateAPI(int iIndex,BusinessCard bc) {
 
-       String strURL = "https://business-card-backend.herokuapp.com/api/cards/:"+Integer.toString(iIndex);
+       String strURL = strBaseURL+strCards+strEach+Integer.toString(alBusinessCard.get(iIndex).getId());
         String POST = "POST";
         Map<String, String> map = new HashMap<String, String>();
         map.put("Content-Type", "application/json");
@@ -442,6 +483,8 @@ public class BusinessCardSet implements Parcelable {
         try {
             jsn.put("business_name", bc.getStrName());
             jsn.put("contact_name", bc.getStrContactName());
+            jsn.put("title", bc.getStrContactName());
+
             jsn.put("email", bc.getStrEmail());
             jsn.put("phone", bc.getStrPhone());
             jsn.put("title", bc.getStrAddress());
@@ -452,7 +495,7 @@ public class BusinessCardSet implements Parcelable {
         } catch (Exception e) {
             e.getMessage();
         }
-        final String result = NetworkAdapter.httpRequest(strURL, NetworkAdapter.POST, jsn, map);
+        final String result = NetworkAdapter.httpRequest(strURL, NetworkAdapter.PUT, jsn, map);
 
         if (result == "") {
             Notification.send(context, "Login error in Business card organizer", "Please check your username and password");

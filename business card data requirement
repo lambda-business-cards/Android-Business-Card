@@ -1,0 +1,74 @@
+Business card data
+
+ID
+Name 
+        Fist name
+            Alphabet
+            Hiragana
+            Kanji
+
+        middle name
+            Alphabet
+            Hiragana
+            Kanji
+            
+        last name
+            Alphabet
+            Hiragana
+            Kanji
+
+
+Picture of card
+    Font
+        picture
+        direction of card
+    Back
+        direction of card
+        picture
+Picture of face
+    front
+    additional
+
+
+
+business
+    company name
+    logo
+    brach
+    title
+    department
+    address
+
+    phone
+    celphone
+    fax
+    e-mail
+    webpage
+
+private
+
+    address
+    city
+    county
+    state
+    country
+    zip code
+    phone
+    e-mail
+    
+    webpage
+
+note
+
+Date of birth
+date you met
+date you will or may
+date entered
+sex  male female other 
+height tall short
+weight fat skiny
+hair back blond red afro none wig
+
+
+
+
