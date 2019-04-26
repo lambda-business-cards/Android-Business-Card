@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +27,7 @@ public class SimpleItemRecyclerViewAdapter
         extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
     private final ItemListActivity  mParentActivity;
+    private final BusinessCardSet bcs;
     private final List<BusinessCard> mValues;
     private final boolean           mTwoPane;
 
@@ -34,9 +36,10 @@ public class SimpleItemRecyclerViewAdapter
 
 
     SimpleItemRecyclerViewAdapter(ItemListActivity parent,
-                                  List<BusinessCard> items,
+                                  BusinessCardSet bcsS,
                                   boolean twoPane) {
-        mValues = items;
+        bcs=bcsS;
+        mValues = bcs.getAlBusinessCard();
         mParentActivity = parent;
         mTwoPane = twoPane;
     }
@@ -66,6 +69,12 @@ public class SimpleItemRecyclerViewAdapter
         holder.mTitleView.setText(bc.getStrTitle());
         holder.mWebURLView.setText(bc.getStrWebURL());
         holder.mTitleView.setText(bc.getStrTitle());
+        holder.btDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bc.delete();
+            }
+        });
 
      /*   holder.mImageView.setImageDrawable(
                 holder.mImageView.getContext().getDrawable(
@@ -136,7 +145,7 @@ public class SimpleItemRecyclerViewAdapter
         mPhoneView,mAddressView,FaxView,mWebURLView;
         final ImageView mImageView;
         final View      parentView;
-
+        final Button btDelete;
         ViewHolder(View view) {
             super(view);
             mIDView= view.findViewById(R.id.textIDList);
@@ -150,6 +159,8 @@ public class SimpleItemRecyclerViewAdapter
             mAddressView = view.findViewById(R.id.text_address);
             FaxView = view.findViewById(R.id.text_fax);
             mWebURLView = view.findViewById(R.id.text_weburl);
+            btDelete=view.findViewById(R.id.button_delete);
+
         }
 
     }

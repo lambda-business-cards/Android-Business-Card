@@ -20,12 +20,33 @@ import static com.example.android_business_card.NetworkAdapter.GET;
 // S04M03-4 start dao
 public class BusinessCardSet implements Parcelable {
 
+
     protected BusinessCardSet(Parcel in) {
         alBusinessCard = in.createTypedArrayList(BusinessCard.CREATOR);
+        strBaseURL = in.readString();
+        strCards = in.readString();
+        strEach = in.readString();
         strUserID = in.readString();
         strUserName = in.readString();
         strToken = in.readString();
         strPassword = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(alBusinessCard);
+        dest.writeString(strBaseURL);
+        dest.writeString(strCards);
+        dest.writeString(strEach);
+        dest.writeString(strUserID);
+        dest.writeString(strUserName);
+        dest.writeString(strToken);
+        dest.writeString(strPassword);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<BusinessCardSet> CREATOR = new Creator<BusinessCardSet>() {
@@ -120,7 +141,6 @@ public class BusinessCardSet implements Parcelable {
         alBusinessCard = new ArrayList<BusinessCard>(100);
         getPeople();
         BusinessCard bc = getPerson(1);
-
         alBusinessCard.add(bc);
         alBusinessCard.add(getPerson(2));
     }
@@ -194,11 +214,6 @@ public class BusinessCardSet implements Parcelable {
             strUserID = preferences.getString("USERID", "");
             strToken = preferences.getString("TOKEN", "");
         }
-
-        //initial test
-        //   if(strPassword.equals(""))strPassword="test";
-        //   if(strUserName.equals(""))strUserName="test1";
-        //  writePreferanceOfLogin();
     }
 
     public void writePreferanceOfLogin() {
@@ -217,8 +232,6 @@ public class BusinessCardSet implements Parcelable {
 
             editor.commit();
         }
-
-
     }
 
     public void clearSharepreferences(){
@@ -284,21 +297,6 @@ public class BusinessCardSet implements Parcelable {
 
 
 
-
-    public boolean loginBusinessCard() {
-        if(strUserName.equals("")||strPassword.equals("")){
-            readPreferanceOfLogin();
-        }
-
-        try {
-            return loginBusinessCard(strUserName,strPassword);
-
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-
     public boolean loginBusinessCard(String strName, String strPassword) throws JSONException {
         String strURL="https://business-card-backend.herokuapp.com/api/users/login";
         String POST    = "POST";
@@ -345,11 +343,12 @@ public class BusinessCardSet implements Parcelable {
             return false;
         }
     }
+    public void delete(){
 
+    }
 
 
     public boolean getAPI(int iIndex){
-
         String strURL="https://business-card-backend.herokuapp.com/api/cards/:";
         String POST    = "POST";
         Map<String,String> map=new HashMap<String, String>();
@@ -468,24 +467,7 @@ public class BusinessCardSet implements Parcelable {
 
     }
 
-    public String[] getStringUserInfo(){
-        String[] strTemp=new String[20];
 
-        return strTemp;
-    }
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeTypedList(alBusinessCard);
-        dest.writeString(strUserID);
-        dest.writeString(strUserName);
-        dest.writeString(strToken);
-        dest.writeString(strPassword);
-    }
 
 
     public void setStringUser(String[] strSet){

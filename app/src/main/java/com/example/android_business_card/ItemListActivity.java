@@ -101,7 +101,7 @@ public class ItemListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        viewAdapter = new SimpleItemRecyclerViewAdapter(this, bcs.getBusinessCardSet(), mTwoPane);
+        viewAdapter = new SimpleItemRecyclerViewAdapter(this, bcs, mTwoPane);
         recyclerView.setAdapter(viewAdapter);
 
     }

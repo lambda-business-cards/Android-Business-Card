@@ -143,7 +143,18 @@ public class BusinessCard implements Parcelable {
         strSet[i++]=strQRcodeURL; //12
         return strSet;
     }
-
+    public void delete(){
+        this.strName = "";
+        this.strTitle= "";
+        this.isChecked=true;
+        this.strAddress= "";
+        this.strPhone= "";
+        this.strEmail= "";
+        this.strWebURL= "";
+        this.strFax= "";
+        this.strImageURL= "";
+        this.strQRcodeURL= "";
+    }
 
     @Override
     public int describeContents() {
