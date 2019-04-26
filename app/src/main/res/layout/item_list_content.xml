@@ -81,11 +81,25 @@
             android:layout_height="wrap_content">
             <TextView
                 android:layout_gravity="center_vertical"
+                android:textSize="10dp"
+                android:text="phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:textAppearance="?attr/textAppearanceListItem" />
+            <TextView
+                android:layout_gravity="center_vertical"
                 android:id="@+id/text_phone"
                 android:text="Luke Skywalker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
+                android:textAppearance="?attr/textAppearanceListItem" />
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:textSize="10dp"
+                android:text="fax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceListItem" />
             <TextView
                 android:layout_gravity="center_vertical"
