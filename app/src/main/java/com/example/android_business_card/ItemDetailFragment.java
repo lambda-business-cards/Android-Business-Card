@@ -62,6 +62,8 @@ public class ItemDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.item_detail, container, false);
+        rootView.getLayoutParams().height=1200;
+        rootView.getLayoutParams().width=1200;
         TextView tv=new TextView(getContext());
         tv.setText("test");
         Bitmap myBitmap = null;
@@ -76,8 +78,9 @@ public class ItemDetailFragment extends Fragment {
 
                 //    mItem.getId())));
             iv.getLayoutParams().width=1200;
-            iv.getLayoutParams().height=2000;
-            iv.setImageBitmap(NetworkAdapter.getBitmapFromUrl("test"));
+            iv.getLayoutParams().height=1200;
+            iv.setScaleType(ImageView.ScaleType.FIT_XY);
+            iv.setImageBitmap(NetworkAdapter.getBitmapFromUrl(mItem.getStrQRcodeURL()));
         }
         return rootView;
     }
