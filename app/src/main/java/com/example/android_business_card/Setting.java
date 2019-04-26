@@ -115,7 +115,7 @@ public class Setting extends AppCompatActivity {
     public void setView(){
         ConstraintLayout cl=findViewById(R.id.cl_setting);
         Guideline gl=findViewById(R.id.guidelineVertical);
-        String[] strTitle={"Your Name","Username","Password","!~Personal","ImageURL","address","phone","e-mail","websiteURL","fax","QR code URL","!~Business","business name","ImageURL","title","address","phone","e-mail","fax","websiteURL","QR code URL"};
+        String[] strTitle={"Your Name","Username","Password","!~Personal","e-mail","phone","ImageURL","address","websiteURL","fax","QR code URL","!~Business","business name","e-mail","phone","ImageURL","title","address","phone","fax","websiteURL","QR code URL"};
         setConstraintLayout(strTitle);
     }
 
